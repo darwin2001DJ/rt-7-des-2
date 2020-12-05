@@ -8,20 +8,34 @@ import {
   theaterList,
 } from "./MovieListJSON";
 export default class App extends Component {
+  ///////////////////////State/////////////////
   constructor(props) {
     super(props);
 
     this.state = {
       data: nowShowing,
+      isChecked: true,
     };
   }
-
+  /////////////////////////Handlers//////////////
   linkHandler = (opt) => {
     this.setState({
       data: opt,
     });
   };
+  checkHandler = (type, value) => {
+    const { data, isChecked } = this.state;
+    const checkFilter = data.filter((checkData) => checkData[type] === value);
 
+    this.setState({
+      isChecked: !this.state.isChecked,
+      data: checkFilter,
+    });
+
+    console.log(checkFilter);
+    console.log(isChecked);
+  };
+  /////////////////////////////////////////////
   render() {
     const { data } = this.state;
     return (
@@ -44,7 +58,11 @@ export default class App extends Component {
             {language.map((lang) => {
               return (
                 <>
-                  <input type="checkbox" id={lang.id} />
+                  <input
+                    type="checkbox"
+                    id={lang.id}
+                    onChange={() => this.checkHandler("language", lang.value)}
+                  />
                   <label htmlFor={lang.id}>{lang.value}</label>
                 </>
               );
@@ -56,7 +74,11 @@ export default class App extends Component {
             {gener.map((gen) => {
               return (
                 <>
-                  <input type="checkbox" id={gen.id} />
+                  <input
+                    type="checkbox"
+                    id={gen.id}
+                    onChange={() => this.checkHandler("gener", gen.value)}
+                  />
                   <label htmlFor={gen.id}>{gen.value}</label>
                 </>
               );
@@ -67,17 +89,26 @@ export default class App extends Component {
             {format.map((format) => {
               return (
                 <>
-                  <input type="checkbox" id={format.id} />
+                  <input
+                    type="checkbox"
+                    id={format.id}
+                    onChange={() => this.checkHandler("format", format.value)}
+                  />
                   <label htmlFor={format.id}>{format.value}</label>
                 </>
               );
             })}
           </div>
           <div className="image">
-            {data.map((now, index) => {
+            {data.map((img, index) => {
               return (
                 <>
-                  <img src={now.src} alt={index + 1} />
+                  <img
+                    key={img.id}
+                    id={img.id}
+                    src={img.src.default}
+                    alt={index + 1}
+                  />
                 </>
               );
             })}
